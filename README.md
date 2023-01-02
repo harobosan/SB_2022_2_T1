@@ -32,4 +32,16 @@ Executar no Windows Powershell:
   ```.\montador_win2.exe -<op> .\<arquivo_fonte>```
 
 
-
+Uso:      montador -<op> <arquivo_fonte>
+Opções:
+          -p        Gera um arquivo .PRE à partir de um arquivo .asm,
+                    realizando o pre-processamento do código.
+ 
+          -m        Gera um arquivo .MCR à partir de um arquivo .PRE,
+                    realizando a substituição de macros no código.
+ 
+          -o        Gera um arquivo .OBJ à partir de um arquivo .MCR,
+                    montando o código de máquina final após testar por
+                    erros léxicos, sintáticos e semânticos no código.
+ 
+          -h        Exibe especificações das opções de linha de comando.
