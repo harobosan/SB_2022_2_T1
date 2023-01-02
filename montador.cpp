@@ -1,6 +1,6 @@
 #include <iostream>     // std::cout, std::endl
 #include <fstream>      // std::ifstream, std::ofstream
-#include <string.h>     // std::string, std::strcmp, std::to_string, std::stoi
+#include <string>       // std::string, std::to_string, std::stoi
 #include <vector>       // std::vector
 #include <utility>      // std::pair, std::make_pair
 
@@ -15,37 +15,55 @@ vector<string> reserved = { "ADD","SUB","MUL","DIV","JMP","JMPN","JMPP","JMPZ","
 
 void print_tokens(vector<vector<string>> tokens)
 {
+    int line_size = 0;
+    int token_size = 0;
+    for(int i = 0; i < tokens.size(); i++) {
+        if(tokens[i].size() > line_size) {
+            line_size = tokens[i].size();
+            if(tokens[i][0].back() != ':') {
+                line_size++;
+            }
+        }
+        for(int j = 0; j < tokens[i].size(); j++) {
+            if(tokens[i][j].size() > token_size) {
+                token_size = tokens[i][j].size();
+            }
+        }
+    }
+
     for(int i = 0; i < tokens.size(); i++) {
         cout << ((i+1 < 10)?"0":"") << i+1 << " |";
-        int lbl = 0;
+        int lbl = -1;
         for(int j = 0; j < tokens[i].size(); j++) {
             if(j == 0 && (tokens[i][j].back() == ':' || tokens[i][j] == "SECTION")) {
-                lbl = 1;
-            }
-
-            if(j == 0 && !lbl) {
-                cout << "          |";
-                cout << " " << tokens[i][j];
-                for(int k = 0; k < 8-tokens[i][j].size(); k++) {
+                for(int k = 0; k < token_size-tokens[i][j].size(); k++) {
                     cout << " ";
                 }
+                cout << " " << tokens[i][j];
+                lbl = 0;
             }
             else if(j == 0) {
-                for(int k = 0; k < 8-tokens[i][j].size(); k++) {
+                for(int k = 0; k < token_size+1; k++) {
                     cout << " ";
                 }
-                cout << " " << tokens[i][j];
+                cout << " | " << tokens[i][j];
+                for(int k = 0; k < token_size-tokens[i][j].size(); k++) {
+                    cout << " ";
+                }
             }
             else {
                 cout << " " << tokens[i][j];
-                for(int k = 0; k < 8-tokens[i][j].size(); k++) {
+                for(int k = 0; k < token_size-tokens[i][j].size(); k++) {
                     cout << " ";
                 }
             }
             cout << " |";
         }
-        for(int j = 0; j < 5-tokens[i].size()+lbl; j++) {
-                cout << "          |";
+        for(int j = 0; j < line_size-tokens[i].size()+lbl; j++) {
+            for(int k = 0; k < token_size; k++) {
+                cout << " ";
+            }
+            cout << "  |";
         }
         cout << endl;
     }
@@ -167,8 +185,10 @@ vector<vector<string>> tokenizer(string name, string extension)
         file.close();
     }
     else {
-        cout << "[ERRO] ARQUIVO " << name+extension << "NÃO FOI ENCONTRADO" << endl;
+        cout << "[ERRO] ARQUIVO "+name+extension+" NÃO FOI ENCONTRADO" << endl;
     }
+
+    print_tokens(tokens);
 
     return tokens;
 }
@@ -189,6 +209,8 @@ void writer(vector<vector<string>> tokens, string name, string extension)
         file << endl;
     }
     file.close();
+
+    cout << "[INFO] "+name+extension+" GERADO COM SUCESSO" << endl;
 }
 
 string lexical_scanner(string token, int line_pos)
@@ -995,38 +1017,35 @@ void object(vector<vector<string>> tokens, string name)
 int main(int argc, char* argv[])
 {
     if(argc == 3) {
-        if(!strcmp(argv[1], "-p")) {
+        if(string(argv[1]) == "-p") {
             vector<vector<string>> tokens = tokenizer(argv[2], ".ASM");
             if(!tokens.empty()) {
-                print_tokens(tokens);
                 pre_processing(tokens, argv[2]);
             }
             else {
-                //cout << "DEU RUIM";
+                cout << "[ERRO] ARQUIVO FONTE " << argv[2] << ".asm VAZIO" << endl;
             }
         }
-        else if(!strcmp(argv[1], "-m")) {
+        else if(string(argv[1]) == "-m") {
             vector<vector<string>> tokens = tokenizer(argv[2], ".PRE");
             if(!tokens.empty()) {
-                print_tokens(tokens);
                 macros(tokens, argv[2]);
             }
             else {
-                //cout << "DEU RUIM";
+                cout << "[ERRO] ARQUIVO FONTE " << argv[2] << ".PRE VAZIO" << endl;
             }
         }
-        else if(!strcmp(argv[1], "-o")) {
+        else if(string(argv[1]) == "-o") {
             vector<vector<string>> tokens = tokenizer(argv[2], ".MCR");
             if(!tokens.empty()) {
-                print_tokens(tokens);
                 object(tokens, argv[2]);
             }
             else {
-                //cout << "DEU RUIM";
+                cout << "[ERRO] ARQUIVO FONTE " << argv[2] << ".MCR VAZIO" << endl;
             }
         }
         else {
-            cout << "[ERRO] OPERADOR " << argv[1] << " DESCONHECIDO" << endl;
+            cout << "[ERRO] OPÇÃO " << argv[1] << " DESCONHECIDA" << endl;
             cout << "       TENTE EXECUTAR O COMANDO NO FORMATO: montador -<op> <arquivo>" << endl;
             cout << "       PARA MAIS INFORMAÇÕES DIGITE: montador -h" << endl;
         }
@@ -1038,8 +1057,17 @@ int main(int argc, char* argv[])
     }
     else { // argc < 3
         if(argc == 2) {
-            if(!strcmp(argv[1], "-h")) {
-               cout << "HELP";
+            if(string(argv[1]) == "-h") {
+                cout << "Uso: montador -<op> <arquivo>" << endl;
+                cout << "Opções:" << endl;
+                cout << "    -p          Gera um arquivo .PRE à partir de um arquivo .asm," << endl;
+                cout << "                realizando o pre-processamento do código." << endl;
+                cout << "    -m          Gera um arquivo .MCR à partir de um arquivo .PRE," << endl;
+                cout << "                realizando a substituição de macros no código." << endl;
+                cout << "    -o          Gera um arquivo .OBJ à partir de um arquivo .MCR," << endl;
+                cout << "                montando o código de máquina final após testar por" << endl;
+                cout << "                erros léxicos, sintáticos e semânticos no código." << endl;
+                cout << "    -h          Exibe especificações das opções de linha de comando." << endl;
             }
             else {
                 cout << "[ERRO] FALTAM ARGUMENTOS" << endl;
@@ -1053,9 +1081,6 @@ int main(int argc, char* argv[])
             cout << "       PARA MAIS INFORMAÇÕES DIGITE: montador -h" << endl;
         }
     }
-
-int x;
-	cin >> x ;
 
     return 0;
 }
