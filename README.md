@@ -7,19 +7,19 @@ Autores
  ----
 
 
-Compilar no Linux Bash:
+### Compilar no Linux Bash:
 
   ```gcc -o montador montador.cpp -lstdc++```
   
   ----
 
-Executar no Linux Bash:
+### Executar no Linux Bash:
 
   ```./montador -<op> <arquivo_fonte>```
   
   ----
 
-Compilar um objeto .exe no Linux Bash:
+### Compilar um objeto .exe no Linux Bash:
 
   ```x86_64-w64-mingw32-gcc -o montador montador.cpp -lstdc++ -static```
   
@@ -27,26 +27,34 @@ Compilar um objeto .exe no Linux Bash:
 
 ----
 
-Executar no Windows Powershell:
+### Executar no Windows Powershell:
 
   ```.\montador_win2.exe -<op> .\<arquivo_fonte>```
   
   
 ----
 
-Descrição de como rodar no CodeBlocks:
+### Descrição de como rodar no CodeBlocks:
 
-versão - codeblocks-20.03mingw-setup.exe
+versão/instalador - codeblocks-20.03mingw-setup.exe
 
-I    Settings -> Linker Settings
-    Sellect "Other linker options"
-    Add -lstdc++ -static
+#### I - Compiler Flags
+ - Settings -> Linker Settings
+ 
+      *Other linker options* 
+  
+      ```Add -lstdc++ -static```
 
-II  Project -> Set programs ' arguments
-    Program arguments:
-    <op> exemplo
+#### II - Program Args
+- Project -> Set programs ' arguments
+    
+    *Program arguments:*
+    
+    ```<op> exemplo```
 
-III Build and run
+#### III - How to Run
+ - Build -> Build and Run 
+ - ou precione F9
 
 ----
 
