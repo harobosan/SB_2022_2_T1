@@ -18,7 +18,7 @@ void print_tokens(vector<vector<string>> tokens)
     int line_size = 0;
     int token_size = 0;
     for(int i = 0; i < tokens.size(); i++) {
-        if(tokens[i].size() > line_size) {
+        if(tokens[i].size() >= line_size) {
             line_size = tokens[i].size();
             if(tokens[i][0].back() != ':') {
                 line_size++;
@@ -969,7 +969,7 @@ void object(vector<vector<string>> tokens, string name)
                         return;
                     }
 
-                    int n = 0;
+                    int n;
                     if(linetable[j+1].first.find("0X") == 0) {
                         n = stoi(linetable[j+1].first,nullptr,16);
                     }
@@ -977,7 +977,7 @@ void object(vector<vector<string>> tokens, string name)
                         n = stoi(linetable[j+1].first);
                     }
                     code.push_back(to_string(n));
-                    if(n < 10) {
+                    if(n > 0 && n < 10) {
                         code.back().insert(code.back().begin(),'0');
                     }
                     memcounter++;
@@ -1003,7 +1003,7 @@ void object(vector<vector<string>> tokens, string name)
         if(code[i].find("0X") == 0) {
             int dec = stoi(code[i],nullptr,16);
             code[i] = to_string(dec);
-            if(dec < 10) {
+            if(dec > 0 && dec < 10) {
                 code[i].insert(code[i].begin(),'0');
             }
         }
