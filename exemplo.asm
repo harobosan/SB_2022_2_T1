@@ -10,29 +10,37 @@ SCALE:  MACRO   &M, &N
         ENDMACRO
 SWAP:   MACRO   &M, &N
         LOAD    &M
-        COPY    &N, &M
+        COPY    &N,&M
         STORE   &N
         ENDMACRO
-SUPER:  MACRO
-        SCALE   N, G
-        SCALE   N+1, G
+SUPER:  MACRO;isto e um comentario
+        SCALE   N, H
+        SCALE   N+1, H
         IF      FLAG
         SWAP    N, N+1
         ENDMACRO
+LABEL:                  ;acabaram as macros
         INPUT   N
-        COPY    N, A
-        SCALE   A,
-        COPY    A, B
-        SCALE   B,
-        SWAP    A, B
-        COPY    B, N+1
-        SUPER
-        OUTPUT  N+1
-        OUTPUT  N
+                   
+        COPY    N,A
+        SCALE   A,G
+        COPY    A,B
+        SCALE   B,H
+        SWAP    N A
+        coPY    B,N+1
+        swap    N N+1
+        sCale   A,h
+
+
+        sUpER
+        OUTPUT  A;b c d e
+        OUTPUT , N
+        OUTPUT  N+1,,,,
         STOP
+
         SECTION DATA
 N:      SPACE   X
 A:      SPACE
 B:      SPACE
 G:      CONST   S
-H:      CONST   FLAG
+H:      CONST   Z
