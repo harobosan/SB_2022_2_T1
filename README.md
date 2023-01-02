@@ -30,6 +30,25 @@ Compilar um objeto .exe no Linux Bash:
 Executar no Windows Powershell:
 
   ```.\montador_win2.exe -<op> .\<arquivo_fonte>```
+  
+  
+----
+
+Descrição de como rodar no CodeBlocks:
+
+versão - codeblocks-20.03mingw-setup.exe
+
+I    Settings -> Linker Settings
+    Sellect "Other linker options"
+    Add -lstdc++ -static
+
+II  Project -> Set programs ' arguments
+    Program arguments:
+    <op> exemplo
+
+III Build and run
+
+----
 
 
 Uso:      montador -<op> <arquivo_fonte>
@@ -45,3 +64,6 @@ Opções:
                     erros léxicos, sintáticos e semânticos no código.
  
           -h        Exibe especificações das opções de linha de comando.
+          
+          
+
