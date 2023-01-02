@@ -1054,5 +1054,8 @@ int main(int argc, char* argv[])
         }
     }
 
+int x;
+	cin >> x ;
+
     return 0;
 }
