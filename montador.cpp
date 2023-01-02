@@ -1044,6 +1044,29 @@ int main(int argc, char* argv[])
                 cout << "[ERRO] ARQUIVO FONTE " << argv[2] << ".MCR VAZIO" << endl;
             }
         }
+        else if(string(argv[1]) == "-a") {
+            vector<vector<string>> tokens = tokenizer(argv[2], ".ASM");
+            if(!tokens.empty()) {
+                pre_processing(tokens, argv[2]);
+            }
+            else {
+                cout << "[ERRO] ARQUIVO FONTE " << argv[2] << ".asm VAZIO" << endl;
+            }
+            tokens = tokenizer(argv[2], ".PRE");
+            if(!tokens.empty()) {
+                macros(tokens, argv[2]);
+            }
+            else {
+                cout << "[ERRO] ARQUIVO FONTE " << argv[2] << ".PRE VAZIO" << endl;
+            }
+            tokens = tokenizer(argv[2], ".MCR");
+            if(!tokens.empty()) {
+                object(tokens, argv[2]);
+            }
+            else {
+                cout << "[ERRO] ARQUIVO FONTE " << argv[2] << ".MCR VAZIO" << endl;
+            }
+        }
         else {
             cout << "[ERRO] OPÇÃO " << argv[1] << " DESCONHECIDA" << endl;
             cout << "       TENTE EXECUTAR O COMANDO NO FORMATO: montador -<op> <arquivo>" << endl;
@@ -1059,14 +1082,25 @@ int main(int argc, char* argv[])
         if(argc == 2) {
             if(string(argv[1]) == "-h") {
                 cout << "Uso: montador -<op> <arquivo>" << endl;
+                cout << "                O nome do arquivo deve ser passado sem" << endl;
+                cout << "                especificar a extensão" << endl;
+                cout << "                O arquivo de nome <arquivo>.asm é automaticamente" << endl;
+                cout << "                buscado no diretório de execução." << endl;
+                cout << endl;
                 cout << "Opções:" << endl;
                 cout << "    -p          Gera um arquivo .PRE à partir de um arquivo .asm," << endl;
                 cout << "                realizando o pre-processamento do código." << endl;
+                cout << endl;
                 cout << "    -m          Gera um arquivo .MCR à partir de um arquivo .PRE," << endl;
                 cout << "                realizando a substituição de macros no código." << endl;
+                cout << endl;
                 cout << "    -o          Gera um arquivo .OBJ à partir de um arquivo .MCR," << endl;
                 cout << "                montando o código de máquina final após testar por" << endl;
                 cout << "                erros léxicos, sintáticos e semânticos no código." << endl;
+                cout << endl;
+                cout << "    -a          Executa em sequência as etapas de pre-processamento," << endl;
+                cout << "                análise de macros e consturção do código objeto." << endl;
+                cout << endl;
                 cout << "    -h          Exibe especificações das opções de linha de comando." << endl;
             }
             else {
